@@ -53,32 +53,8 @@ _.mixin({
   isAbsolutePath(p) {
     return path.isAbsolute(p);
   },
-  mapObject(obj, func) {
-    const output = {};
-
-    _.each(obj, (v, k) => {
-      output[k] = func(v);
-    });
-
-    return output;
-  },
-  isHex(h) {
-    return CustomRegex.hex.test(h);
-  },
-  isUrl(url) {
-    if (Meteor.isProduction) {
-      return SimpleSchema.RegEx.Url.test(url);
-    }
-
-    return SimpleSchema.RegEx.Url.test(url)
-      || /^http:\/\/localhost(:[0-9]+)?/.test(url)
-      || /^http:\/\/127.0.0.1(:[0-9]+)?/.test(url);
-  },
   isId(id) {
     return SimpleSchema.RegEx.Id.test(id);
-  },
-  isEmail(email) {
-    return SimpleSchema.RegEx.Email.test(email);
   },
   isArrayId(arr) {
     if (!_.isArray(arr) || 0 === arr.length) {
@@ -93,83 +69,21 @@ _.mixin({
 
     return true;
   },
-  isFirst(first) {
-    return CustomRegex.first.test(first);
-  },
-  isColor(hex) {
-    return CustomRegex.color.test(hex);
-  },
   isTag(tag) {
     return _.isString(tag) && CustomRegex.tag.test(tag) && 30 >= tag.length;
   },
-  sanitize(data) {
-    return sanitizeRecursive(data, sanitizeString);
-  },
-  sanitizeTitle(data) {
-    return sanitizeTitle(data);
-  },
-  sanitizeTexts(data) {
-    return sanitizeRecursive(data, sanitizeTitle);
-  },
-  truncateTitle(title) {
-    const size = parseInt(Meteor.settings.public.title_length, 10) - 3;
-
-    return _.truncate(title, size);
-  },
-  truncateChannelTitle(title) {
-    const size = parseInt(Meteor.settings.public.channel_title_length, 10) - 3;
-
-    return _.truncate(title, size);
-  },
-  truncateDescription(title) {
-    const size = parseInt(Meteor.settings.public.description_length, 10) - 3;
-
-    return _.truncate(title, size);
-  },
-  move(arr, fromIndex, toIndex) {
-    const element = arr[fromIndex];
-
-    arr.splice(fromIndex, 1);
-    arr.splice(toIndex, 0, element);
-
-    return arr;
-  },
-  isISODate(str) {
-    return CustomRegex.isoDate.test(str);
-  },
-  chunk(array, chunkSize) {
-    return _.reduce(array, (r, item, index) => {
-      const reducer = r;
-      reducer.current.push(item);
-
-      if (reducer.current.length === chunkSize || index + 1 === array.length) {
-        reducer.chunks.push(reducer.current);
-        reducer.current = [];
-      }
-      return reducer;
-    }, {
-      current: [],
-      chunks: [],
-    }).chunks;
+  truncate(str, nbr) {
+    if (!str) {
+      return '';
+    }
+    
+    if (str.length <= nbr) {
+      return str;
+    }
+    
+    return `${str.substring(0, nbr)}...`;
   },
 });
-
-/**
- * convert a string to Date object
- * @param {String} str
- * @return {*}
- */
-export const stringISOToDate = (str) => {
-  if (!_.isISODate(str)) {
-    return null;
-  }
-  try {
-    return moment(str)
-      .toDate();
-  } catch (e) {
-    return null;
-  }
-};
 
 /**
  * convert a string to Date object
@@ -198,7 +112,6 @@ export const buildRegExp = (w) => {
 
   return new RegExp(fullExp, 'i');
 };
-
 
 /**
  * Return a random hexadecimal string
