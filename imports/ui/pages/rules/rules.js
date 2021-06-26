@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { $ } from 'meteor/jquery';
 import { _ } from 'meteor/underscore';
@@ -7,6 +8,7 @@ import datatables_bs from 'datatables.net-bs';
 import { Rules } from '../../../lib/api/rules/rules';
 import 'datatables.net-bs/css/dataTables.bootstrap.css';
 import './rules.html';
+import {flashMessage} from "../../../startup/client/utils";
 
 let theDataTable = null;
 
@@ -39,4 +41,18 @@ Template.rules.onCreated(function rulesOnCreated() {
     rulesList = Rules.find({}, { sort: { phase: 1, id: 1 } }).fetch();
     populateDatatable(rulesList);
   });
+});
+
+Template.rules.events({
+  'click #remove-all-rules': (event) => {
+    event.preventDefault();
+
+    Meteor.call('cleanUpRules', (err) => {
+      if (err) {
+        flashMessage(err, 'danger');
+        return;
+      }
+      flashMessage('All rules removed', 'success');
+    });
+  },
 });

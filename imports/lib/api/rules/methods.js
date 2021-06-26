@@ -88,6 +88,9 @@ if (Meteor.isServer) {
   };
 
   Meteor.methods({
+    cleanUpRules() {
+      return Rules.remove({});
+    },
     parseRules() {
       const bound = Meteor.bindEnvironment((callback) => { callback(); });
       const rulesPath = Config.findOne().rulesPath;
