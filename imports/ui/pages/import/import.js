@@ -21,6 +21,15 @@ Template.import.helpers({
 
     return null;
   },
+  getEntriesPath() {
+    const config = Config.findOne();
+
+    if (config) {
+      return config.entriesPath || null;
+    }
+
+    return null;
+  },
 });
 
 Template.import.events({

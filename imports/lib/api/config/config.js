@@ -42,6 +42,10 @@ Schemas.Config = new SimpleSchema({
     type: String,
     label: 'Rules path',
   },
+  entriesPath: {
+    type: String,
+    label: 'Logs path',
+  },
   submitted: {
     type: Date,
     autoValue() {

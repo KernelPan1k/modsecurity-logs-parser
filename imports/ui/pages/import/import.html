@@ -30,11 +30,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Logs folder</h3>
                 </div>
-                <form role="form" data-bitwarden-watching="1">
+                <form role="form" id="entries-import">
                     <div class="box-body">
                         <div class="form-group">
                             <label for="exampleInputFile">Folder</label>
-                            <input type="file" id="exampleInputFile">
+                            <input type="text" id="entries-path" value="{{getEntriesPath}}" />
                         </div>
                     </div>
                     <div class="box-footer">
