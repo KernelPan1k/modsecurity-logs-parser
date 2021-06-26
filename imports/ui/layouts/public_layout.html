@@ -1,0 +1,20 @@
+<template name="publicLayout">
+    {{#momentum plugin="fade"}}
+        {{#if Template.subscriptionsReady}}
+            <div class="skin-blue sidebar-mini">
+                <div class="wrapper" style="min-height: 100vh">
+                    {{>flashs}}
+                    {{> header}}
+                    {{> navigation}}
+                    <div class="content-wrapper" style="min-height: 100vh">
+                        <section class="content">
+                            {{> Template.dynamic template=main}}
+                        </section>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            {{> loader}}
+        {{/if}}
+    {{/momentum}}
+</template>

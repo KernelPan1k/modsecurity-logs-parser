@@ -1,0 +1,94 @@
+{
+  "name": "modsecurity-helper",
+  "private": true,
+  "scripts": {
+    "start": "meteor run",
+    "desktop": "meteor-desktop"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.10.2",
+    "babel-runtime": "^6.26.0",
+    "bcrypt": "^4.0.1",
+    "meteor-node-stubs": "^1.0.3",
+    "moment": "^2.29.1",
+    "simpl-schema": "^1.12.0"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "allowImportExportEverywhere": true
+    },
+    "env": {
+      "browser": true
+    },
+    "plugins": [
+      "meteor"
+    ],
+    "extends": [
+      "airbnb",
+      "plugin:meteor/recommended"
+    ],
+    "settings": {
+      "import/resolver": "meteor"
+    },
+    "rules": {
+      "import/no-extraneous-dependencies": "off",
+      "import/prefer-default-export": "off",
+      "no-underscore-dangle": "off",
+      "react/no-this-in-sfc": "off",
+      "prefer-destructuring": [
+        "error",
+        {
+          "array": false,
+          "object": false
+        }
+      ],
+      "max-len": [
+        "error",
+        120
+      ],
+      "yoda": [
+        "error",
+        "always"
+      ],
+      "meteor/no-session": [
+        0
+      ],
+      "no-plusplus": [
+        "error",
+        {
+          "allowForLoopAfterthoughts": true
+        }
+      ],
+      "import/extensions": [
+        "off",
+        "never"
+      ],
+      "no-param-reassign": [
+        "error",
+        {
+          "props": true
+        }
+      ],
+      "no-trailing-spaces": [
+        "error",
+        {
+          "skipBlankLines": true
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "electron": "6.1.7",
+    "electron-builder": "21.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-import-resolver-meteor": "^0.4.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-meteor": "^7.0.0",
+    "eslint-plugin-react": "^7.20.0",
+    "meteor-desktop": "^2.2.5"
+  }
+}

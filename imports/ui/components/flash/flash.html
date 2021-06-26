@@ -1,0 +1,13 @@
+<template name="flashs">
+    <div class="flashs row-fluid" style="z-index: 99999; position: fixed; right: 210px; top: 10px">
+        {{#each flashs}}
+            {{> flash}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="flash">
+    <div class="alert alert-{{type}}">
+        <span>&nbsp;&nbsp;{{message}} </span>
+    </div>
+</template>
