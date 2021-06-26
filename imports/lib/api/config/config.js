@@ -44,7 +44,7 @@ Schemas.Config = new SimpleSchema({
   },
   entriesPath: {
     type: String,
-    label: 'Logs path',
+    label: 'Audit Logs path',
   },
   submitted: {
     type: Date,
