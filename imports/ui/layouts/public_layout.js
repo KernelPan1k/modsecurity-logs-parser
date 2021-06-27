@@ -1,4 +1,4 @@
 import './header.html';
-import './navigation.html';
+import '../components/navigation/navigation';
 import '../components/flash';
 import './public_layout.html';

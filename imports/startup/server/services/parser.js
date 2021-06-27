@@ -2,23 +2,141 @@ import { _ } from 'meteor/underscore';
 import fs from 'fs';
 
 class AuditLog {
-  constructor(logId, a, b, e, f, h, z) {
+  constructor(logId, a, b, e, f, h) {
     this.logId = logId;
+    this.requestDate = null;
+    this.uri = null;
+    this.ua = null;
+    this.host = null;
+    this.messages = [];
     this.a = a;
     this.b = b;
     this.e = e;
     this.f = f;
     this.h = h;
-    this.z = z;
+  }
+
+  stringDateToDate(str) {
+    const months = {
+      Jan: 0,
+      Feb: 1,
+      Mar: 2,
+      Apr: 3,
+      May: 4,
+      Jun: 5,
+      Jul: 6,
+      Aug: 7,
+      Sep: 8,
+      Oct: 9,
+      Nov: 10,
+      Dec: 1,
+    };
+
+    const sp1 = str.split(' ')[0].split(':');
+    const sp2 = sp1[0].split('/');
+    const day = parseInt(sp2[0], 10);
+    const month = parseInt(months[sp2[1]], 10);
+    const year = parseInt(sp2[2], 10);
+    const hour = parseInt(sp1[0], 10);
+    const minute = parseInt(sp1[1], 10);
+    const seconds = parseInt(sp1[2], 10);
+
+    this.requestDate = new Date(year, month, day, hour, minute, seconds);
   }
 
   parseA() {
-    const a = this.a || '';
+    const a = this.a[0] || '';
     const regEx = '/^\[([0-9]{2}/[a-zA-Z]+/[0-9]{4}(:[0-9]{2}){3}) +[0-9]+\]/';
     if (regEx.test(a)) {
       const arr = a.match(regEx);
-      this.requestDate = new Date(arr[0]);
+      this.stringDateToDate(arr[1]);
     }
+  }
+
+  parseB() {
+    _.each(this.b, (z, i) => {
+      if (0 === i) {
+        this.uri = z;
+      }
+
+      if (/^User-Agent:/.test(z)) {
+        const arr = z.match(/^User-Agent: (.+)$/);
+        this.ua = (arr[1] || '').trim();
+      }
+
+      if (/^Host:/.test(z)) {
+        const arr = z.match(/^Host: (.+)$/);
+        this.host = (arr[1] || '').trim();
+      }
+    });
+  }
+
+  parserH() {
+    _.each(this.h, (z) => {
+      if (/^Message:/.test(z)) {
+        const arr = z.match(/^Message: (.+)$/);
+        this.parseMessage((arr[1] || '').trim());
+      }
+    });
+  }
+
+  parseMessage(message) {
+    const obj = {
+      value: '',
+      data: '',
+      file: '',
+      line: 0,
+      id: 0,
+      msg: '',
+      severity: '',
+      tags: [],
+      plain: message,
+    };
+
+    obj.value = (message.split('. [file "')[0] || '');
+    const regexFile = / \[file "([ ()a-zA-Z0-9/\\-])+"\]/;
+    const regexData = / \[data "([\"\' ()a-zA-Z0-9/\\-])+"\]/;
+    const regexSeverity = / \[severity "([a-zA-Z])+"\]/;
+    const regexMsg = / \[msg "([ ()a-zA-Z0-9/\\-])+"\]/;
+    const regexLine = / \[line "([0-9])+"\]/;
+    const regexId = / \[id "([0-9])+"\]/;
+    const regexTags = / \[tag "([ ()a-zA-Z0-9/\\-])+"\] /g;
+
+    if (regexData.test(message)) {
+      const arr = message.match(regexData);
+      obj.data = arr[1];
+    }
+
+    if (regexFile.test(message)) {
+      const arr = message.match(regexFile);
+      obj.file = arr[1];
+    }
+
+    if (regexSeverity.test(message)) {
+      const arr = message.match(regexSeverity);
+      obj.severity = arr[1];
+    }
+
+    if (regexLine.test(message)) {
+      const arr = message.match(regexLine);
+      obj.line = parseInt(arr[1], 10);
+    }
+
+    if (regexId.test(message)) {
+      const arr = message.match(regexId);
+      obj.id = parseInt(arr[1], 10);
+    }
+
+    if (regexMsg.test(message)) {
+      const arr = message.match(regexMsg);
+      obj.msg = arr[1];
+    }
+
+    _.each(message.matchAll(regexTags), (z) => {
+      obj.tags.push(z[1]);
+    });
+    
+    this.messages.push(obj);
   }
 }
 

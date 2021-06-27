@@ -1,2 +1,1 @@
 import './rules';
-import './methods';

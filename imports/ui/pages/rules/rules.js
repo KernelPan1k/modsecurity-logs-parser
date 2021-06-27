@@ -16,8 +16,10 @@ const populateDatatable = (rules) => {
   const data = [];
 
   _.each(rules, (z) => {
-    const row = [z.id, z.phase, (z.tags || []).join('\n'), _.truncate(z.plain, 200)];
-    data.push(row);
+    if (z.id) {
+      const row = [z.id, z.phase, (z.tags || []).join('\n'), _.truncate(z.plain, 200)];
+      data.push(row);
+    }
   });
 
   datatables(window, $);
