@@ -22,7 +22,7 @@ class ConfigCollection extends Mongo.Collection {
   }
 }
 
-export const Config = new ConfigCollection('Config');
+export const Config = new ConfigCollection('config');
 
 Config.deny({
   update: () => true,
@@ -42,7 +42,7 @@ Schemas.Config = new SimpleSchema({
     type: String,
     label: 'Rules path',
   },
-  entriesPath: {
+  auditPath: {
     type: String,
     label: 'Audit Logs path',
   },

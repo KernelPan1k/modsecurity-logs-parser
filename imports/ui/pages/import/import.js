@@ -53,4 +53,24 @@ Template.import.events({
       flashMessage('Rules loaded successfully', 'success');
     });
   },
+  'submit #entries-import': (event) => {
+    event.preventDefault();
+    const $form = $(event.currentTarget);
+    const $input = $form.find('#audit-path').first();
+    const auditPath = $input.val();
+
+    if (!auditPath) {
+      flashMessage('Missing directory path', 'danger');
+      return;
+    }
+
+    ConfigAuditPathAddOrEdit.call({ auditPath: auditPath }, (err) => {
+      if (err) {
+        flashMessage(err, 'danger');
+        return;
+      }
+
+      flashMessage('Audit logs loaded successfully', 'success');
+    });
+  },
 });

@@ -1,7 +1,7 @@
 import { _ } from 'meteor/underscore';
 import fs from 'fs';
 
-class AuditLog {
+class AuditLogEntry {
   constructor(logId, a, b, e, f, h) {
     this.logId = logId;
     this.requestDate = null;
@@ -51,6 +51,8 @@ class AuditLog {
       const arr = a.match(regEx);
       this.stringDateToDate(arr[1]);
     }
+
+    this.a = a[0] || '';
   }
 
   parseB() {
@@ -69,15 +71,27 @@ class AuditLog {
         this.host = (arr[1] || '').trim();
       }
     });
+
+    this.b = this.b.join('\n');
   }
 
-  parserH() {
+  parseE() {
+    this.e = this.e.join('\n');
+  }
+
+  parseF() {
+    this.f = this.f.join('\n');
+  }
+
+  parseH() {
     _.each(this.h, (z) => {
       if (/^Message:/.test(z)) {
         const arr = z.match(/^Message: (.+)$/);
         this.parseMessage((arr[1] || '').trim());
       }
     });
+
+    this.h = this.h.join('\n');
   }
 
   parseMessage(message) {
@@ -135,10 +149,100 @@ class AuditLog {
     _.each(message.matchAll(regexTags), (z) => {
       obj.tags.push(z[1]);
     });
-    
+
     this.messages.push(obj);
   }
+
+  parseAll() {
+    this.parseA();
+    this.parseB();
+    this.parseH();
+    this.parseE();
+    this.parseF();
+  }
+
+  toMongo() {
+    this.parseAll();
+
+    return {
+      id: this.logId || null,
+      requestDate: this.requestDate || null,
+      uri: this.uri || '',
+      ua: this.ua || '',
+      host: this.host || '',
+      messages: this.messages || [],
+      sectionA: this.a || '',
+      sectionB: this.b || '',
+      sectionE: this.e || '',
+      sectionF: this.f || '',
+      sectionH: this.h || '',
+    }
+  }
 }
+
+/**
+ * @param file
+ * @returns {*[]}
+ */
+export const extractLogs = (file) => {
+  const logs = [];
+
+  try {
+    const data = fs.readFileSync(file, 'UTF-8');
+    const lines = data.split(/\r?\n/);
+
+    let id = null;
+    let currentSection = null;
+    let obj = {
+      'A' : [],
+      'B' : [],
+      'E' : [],
+      'F' : [],
+      'H' : [],
+    }
+
+    let startRegex = /^--([a-z0-9]{8})-A--$/
+    let endRegex = /^--([a-z0-9]{8})-Z--$/
+    let otherSectionRegex = /^--[a-z0-9]{8}-(B|E|F|H)--$/
+
+    lines.forEach((line) => {
+      if (!line || '' === line) {
+        return false;
+      }
+
+      if (startRegex.test(line)) {
+        const arr = line.match(startRegex);
+        id = arr[0];
+        currentSection = 'A';
+        return false;
+
+      } else if (endRegex.test(line)) {
+        const auditLogEntry = new AuditLogEntry(id, obj.A, obj.B, obj.E, obj.F, obj.H);
+        const auditLogEntryToMongo = auditLogEntry.toMongo();
+        const document = En
+        currentSection = null;
+        id = null;
+        obj = {
+          'A' : [],
+          'B' : [],
+          'E' : [],
+          'F' : [],
+          'H' : [],
+        }
+      } else if (otherSectionRegex.test(line)) {
+        const arr = line.match(otherSectionRegex);
+        currentSection = arr[1];
+      } else if (null !== currentSection) {
+        obj[currentSection].push(line);
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+
+  return logs;
+};
 
 /**
  * @param file

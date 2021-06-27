@@ -22,14 +22,14 @@ FlowRouter.route('/rules', {
   },
 });
 
-FlowRouter.route('/entries', {
+FlowRouter.route('/audit', {
   name: 'entries',
   action() {
     BlazeLayout.render('publicLayout', { main: 'entries' });
   },
 });
 
-FlowRouter.route('/entries-display/:id', {
+FlowRouter.route('/audit-display/:id', {
   name: 'entries-display',
   action() {
     BlazeLayout.render('publicLayout', { main: 'entries_display' });

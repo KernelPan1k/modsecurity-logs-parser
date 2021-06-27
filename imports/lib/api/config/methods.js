@@ -41,3 +41,40 @@ export const ConfigRulesAddOrEdit = new ValidatedMethod({
     return true;
   },
 });
+
+/**
+ * @type {ValidatedMethod}
+ */
+export const ConfigAuditPathAddOrEdit = new ValidatedMethod({
+  name: 'ConfigAuditPathAddOrEdit',
+  validate(args) {
+    check(args, {
+      auditPath: String,
+    });
+  },
+  applyOptions: {
+    noRetry: true,
+    throwStubExceptions: true,
+  },
+  run(args) {
+    const auditPath = path.normalize(args.auditPath);
+
+    if (!_.isAbsolutePath(auditPath)) {
+      throw new Meteor.Error('logic', 'Path must be absolute');
+    }
+
+    const conf = Config.findOne({});
+
+    if (conf && _.isId(conf._id)) {
+      Config.update({ id: conf._id }, { $set: { auditPath: auditPath } });
+    } else {
+      Config.insert({ auditPath: auditPath });
+    }
+
+    if (Meteor.isServer) {
+      return Meteor.call('parseAuditLogs');
+    }
+
+    return true;
+  },
+});
