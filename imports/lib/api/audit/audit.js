@@ -62,6 +62,9 @@ Schemas.Audit = new SimpleSchema({
             }
         },
     },
+    'messages.$': {
+        type: Object,
+    },
     'messages.$.value': {
         type: String,
     },
