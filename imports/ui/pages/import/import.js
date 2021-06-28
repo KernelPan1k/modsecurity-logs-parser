@@ -1,7 +1,7 @@
 import { Template } from 'meteor/templating';
 import { $ } from 'meteor/jquery';
 import { flashMessage } from '../../../startup/client/utils';
-import { ConfigRulesAddOrEdit } from '../../../lib/api/config/methods';
+import { ConfigRulesAddOrEdit, ConfigAuditPathAddOrEdit } from '../../../lib/api/config/methods';
 import { Config } from '../../../lib/api/config/config';
 import './import.html';
 
@@ -53,7 +53,7 @@ Template.import.events({
       flashMessage('Rules loaded successfully', 'success');
     });
   },
-  'submit #entries-import': (event) => {
+  'submit #audit-import': (event) => {
     event.preventDefault();
     const $form = $(event.currentTarget);
     const $input = $form.find('#audit-path').first();

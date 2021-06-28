@@ -40,10 +40,12 @@ Schemas.Config = new SimpleSchema({
   },
   rulesPath: {
     type: String,
+    optional: true,
     label: 'Rules path',
   },
   auditPath: {
     type: String,
+    optional: true,
     label: 'Audit Logs path',
   },
   submitted: {

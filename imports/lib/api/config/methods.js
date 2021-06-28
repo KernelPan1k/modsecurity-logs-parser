@@ -66,9 +66,9 @@ export const ConfigAuditPathAddOrEdit = new ValidatedMethod({
     const conf = Config.findOne({});
 
     if (conf && _.isId(conf._id)) {
-      Config.update({ id: conf._id }, { $set: { auditPath: auditPath } });
+      Config.update({ id: conf._id }, { $set: { auditPath } });
     } else {
-      Config.insert({ auditPath: auditPath });
+      Config.insert({ auditPath });
     }
 
     if (Meteor.isServer) {

@@ -1,5 +1,6 @@
 import { _ } from 'meteor/underscore';
 import fs from 'fs';
+import {Audit} from "../../../lib/api/audit/audit";
 
 class AuditLogEntry {
   constructor(logId, a, b, e, f, h) {
@@ -29,7 +30,7 @@ class AuditLogEntry {
       Sep: 8,
       Oct: 9,
       Nov: 10,
-      Dec: 1,
+      Dec: 11,
     };
 
     const sp1 = str.split(' ')[0].split(':');
@@ -219,7 +220,12 @@ export const extractLogs = (file) => {
       } else if (endRegex.test(line)) {
         const auditLogEntry = new AuditLogEntry(id, obj.A, obj.B, obj.E, obj.F, obj.H);
         const auditLogEntryToMongo = auditLogEntry.toMongo();
-        const document = En
+        const document = Audit.findOne({ id: auditLogEntryToMongo.logId });
+        if (document) {
+          Audit.update( {_id: document._id}, auditLogEntryToMongo);
+        } else {
+          Audit.insert(auditLogEntryToMongo);
+        }
         currentSection = null;
         id = null;
         obj = {
