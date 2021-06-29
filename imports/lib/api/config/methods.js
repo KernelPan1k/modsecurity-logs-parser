@@ -66,7 +66,7 @@ export const ConfigAuditPathAddOrEdit = new ValidatedMethod({
     const conf = Config.findOne({});
 
     if (conf && _.isId(conf._id)) {
-      Config.update({ id: conf._id }, { $set: { auditPath } });
+      Config.update({ _id: conf._id }, { $set: { auditPath } });
     } else {
       Config.insert({ auditPath });
     }

@@ -21,11 +21,11 @@ Template.import.helpers({
 
     return null;
   },
-  getEntriesPath() {
+  getAuditPath() {
     const config = Config.findOne();
 
     if (config) {
-      return config.entriesPath || null;
+      return config.auditPath || null;
     }
 
     return null;
@@ -64,7 +64,7 @@ Template.import.events({
       return;
     }
 
-    ConfigAuditPathAddOrEdit.call({ auditPath: auditPath }, (err) => {
+    ConfigAuditPathAddOrEdit.call({ auditPath }, (err) => {
       if (err) {
         flashMessage(err, 'danger');
         return;

@@ -1,6 +1,6 @@
 import { _ } from 'meteor/underscore';
 import fs from 'fs';
-import {Audit} from "../../../lib/api/audit/audit";
+import { Audit } from '../../../lib/api/audit/audit';
 
 class AuditLogEntry {
   constructor(logId, a, b, e, f, h) {
@@ -33,23 +33,22 @@ class AuditLogEntry {
       Dec: 11,
     };
 
-    const sp1 = str.split(' ')[0].split(':');
+    const sp1 = str.split(':');
     const sp2 = sp1[0].split('/');
     const day = parseInt(sp2[0], 10);
     const month = parseInt(months[sp2[1]], 10);
     const year = parseInt(sp2[2], 10);
-    const hour = parseInt(sp1[0], 10);
-    const minute = parseInt(sp1[1], 10);
-    const seconds = parseInt(sp1[2], 10);
-
+    const hour = parseInt(sp1[1], 10);
+    const minute = parseInt(sp1[2], 10);
+    const seconds = parseInt(sp1[3], 10);
+    // TODO UTC
     this.requestDate = new Date(year, month, day, hour, minute, seconds);
   }
 
   parseA() {
     const a = this.a[0] || '';
-    const regEx = '/^\[([0-9]{2}/[a-zA-Z]+/[0-9]{4}(:[0-9]{2}){3}) +[0-9]+\]/';
-    if (regEx.test(a)) {
-      const arr = a.match(regEx);
+    if (/^\[([0-9]{2}\/[a-zA-Z]+\/[0-9]{4}(:[0-9]{2}){3}) \+[0-9]+\]/.test(a)) {
+      const arr = a.match(/^\[([0-9]{2}\/[a-zA-Z]+\/[0-9]{4}(:[0-9]{2}){3}) \+[0-9]+\]/);
       this.stringDateToDate(arr[1]);
     }
 
@@ -109,13 +108,13 @@ class AuditLogEntry {
     };
 
     obj.value = (message.split('. [file "')[0] || '');
-    const regexFile = / \[file "([ ()a-zA-Z0-9/\\-])+"\]/;
-    const regexData = / \[data "([\"\' ()a-zA-Z0-9/\\-])+"\]/;
-    const regexSeverity = / \[severity "([a-zA-Z])+"\]/;
-    const regexMsg = / \[msg "([ ()a-zA-Z0-9/\\-])+"\]/;
-    const regexLine = / \[line "([0-9])+"\]/;
-    const regexId = / \[id "([0-9])+"\]/;
-    const regexTags = / \[tag "([ ()a-zA-Z0-9/\\-])+"\] /g;
+    const regexFile = / \[file "([ .()/:_a-zA-Z0-9\\-]+)"\]/;
+    const regexData = / \[data "([ "',:.;_()a-zA-Z0-9/\\-]+)"\]/;
+    const regexSeverity = / \[severity "([a-zA-Z]+)"\]/;
+    const regexMsg = / \[msg "([ (),;.:_a-zA-Z0-9/\\-]+)"\]/;
+    const regexLine = / \[line "([0-9]+)"\]/;
+    const regexId = / \[id "([0-9]+)"\]/;
+    const regexTags = / \[tag "([ ._()a-zA-Z0-9/\\-]+)"\] /g;
 
     if (regexData.test(message)) {
       const arr = message.match(regexData);
@@ -147,9 +146,11 @@ class AuditLogEntry {
       obj.msg = arr[1];
     }
 
-    _.each(message.matchAll(regexTags), (z) => {
-      obj.tags.push(z[1]);
-    });
+    if (regexTags.test(message)) {
+      const arr = message.match(regexTags);
+      // TODO DEBUG
+      obj.tags.push(arr[1]);
+    }
 
     this.messages.push(obj);
   }
@@ -177,7 +178,7 @@ class AuditLogEntry {
       sectionE: this.e || '',
       sectionF: this.f || '',
       sectionH: this.h || '',
-    }
+    };
   }
 }
 
@@ -195,16 +196,16 @@ export const extractLogs = (file) => {
     let id = null;
     let currentSection = null;
     let obj = {
-      'A' : [],
-      'B' : [],
-      'E' : [],
-      'F' : [],
-      'H' : [],
-    }
+      A: [],
+      B: [],
+      E: [],
+      F: [],
+      H: [],
+    };
 
-    let startRegex = /^--([a-z0-9]{8})-A--$/
-    let endRegex = /^--([a-z0-9]{8})-Z--$/
-    let otherSectionRegex = /^--[a-z0-9]{8}-(B|E|F|H)--$/
+    const startRegex = /^--([a-z0-9]{8})-A--$/;
+    const endRegex = /^--([a-z0-9]{8})-Z--$/;
+    const otherSectionRegex = /^--[a-z0-9]{8}-(B|E|F|H)--$/;
 
     lines.forEach((line) => {
       if (!line || '' === line) {
@@ -216,25 +217,24 @@ export const extractLogs = (file) => {
         id = arr[0];
         currentSection = 'A';
         return false;
-
-      } else if (endRegex.test(line)) {
+      } if (endRegex.test(line)) {
         const auditLogEntry = new AuditLogEntry(id, obj.A, obj.B, obj.E, obj.F, obj.H);
         const auditLogEntryToMongo = auditLogEntry.toMongo();
         const document = Audit.findOne({ id: auditLogEntryToMongo.logId });
         if (document) {
-          Audit.update( {_id: document._id}, auditLogEntryToMongo);
+          Audit.update({ _id: document._id }, auditLogEntryToMongo);
         } else {
           Audit.insert(auditLogEntryToMongo);
         }
         currentSection = null;
         id = null;
         obj = {
-          'A' : [],
-          'B' : [],
-          'E' : [],
-          'F' : [],
-          'H' : [],
-        }
+          A: [],
+          B: [],
+          E: [],
+          F: [],
+          H: [],
+        };
       } else if (otherSectionRegex.test(line)) {
         const arr = line.match(otherSectionRegex);
         currentSection = arr[1];
@@ -242,7 +242,6 @@ export const extractLogs = (file) => {
         obj[currentSection].push(line);
       }
     });
-
   } catch (err) {
     console.error(err);
   }
