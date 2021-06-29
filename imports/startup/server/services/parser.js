@@ -52,7 +52,7 @@ class AuditLogEntry {
       this.stringDateToDate(arr[1]);
     }
 
-    this.a = a[0] || '';
+    this.a = a;
   }
 
   parseB() {
@@ -147,9 +147,8 @@ class AuditLogEntry {
     }
 
     if (regexTags.test(message)) {
-      const arr = message.match(regexTags);
-      // TODO DEBUG
-      obj.tags.push(arr[1]);
+      const arr = [...message.matchAll(regexTags)];
+      obj.tags = _.map(arr, (z) => z[1]);
     }
 
     this.messages.push(obj);
@@ -209,20 +208,20 @@ export const extractLogs = (file) => {
 
     lines.forEach((line) => {
       if (!line || '' === line) {
-        return false;
+        return;
       }
 
       if (startRegex.test(line)) {
         const arr = line.match(startRegex);
-        id = arr[0];
+        id = arr[1];
         currentSection = 'A';
-        return false;
+        return;
       } if (endRegex.test(line)) {
         const auditLogEntry = new AuditLogEntry(id, obj.A, obj.B, obj.E, obj.F, obj.H);
         const auditLogEntryToMongo = auditLogEntry.toMongo();
-        const document = Audit.findOne({ id: auditLogEntryToMongo.logId });
+        const document = Audit.findOne({ id: auditLogEntryToMongo.id });
         if (document) {
-          Audit.update({ _id: document._id }, auditLogEntryToMongo);
+          Audit.update({ _id: document._id }, { $set: auditLogEntryToMongo });
         } else {
           Audit.insert(auditLogEntryToMongo);
         }

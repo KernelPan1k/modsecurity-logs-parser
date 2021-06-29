@@ -54,6 +54,21 @@ Schemas.Audit = new SimpleSchema({
   host: {
     type: String,
   },
+  sectionA: {
+    type: String,
+  },
+  sectionB: {
+    type: String,
+  },
+  sectionE: {
+    type: String,
+  },
+  sectionF: {
+    type: String,
+  },
+  sectionH: {
+    type: String,
+  },
   messages: {
     type: Array,
     autoValue() {
@@ -115,4 +130,4 @@ Schemas.Audit = new SimpleSchema({
   },
 });
 
-Audit.attachSchema(Schemas.Config);
+Audit.attachSchema(Schemas.Audit);

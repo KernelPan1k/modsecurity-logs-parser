@@ -4,11 +4,15 @@ import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { Config } from '../../../lib/api/config/config';
 import { Rules } from '../../../lib/api/rules/rules';
-import {extractLogs, extractRules} from './parser';
+import { extractLogs, extractRules } from './parser';
+import { Audit } from '../../../lib/api/audit/audit';
 
 Meteor.methods({
   cleanUpRules() {
     return Rules.remove({});
+  },
+  cleanUpAudit() {
+    return Audit.remove({});
   },
   parseRules() {
     const bound = Meteor.bindEnvironment((callback) => { callback(); });

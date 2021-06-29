@@ -1,5 +1,5 @@
 import './home';
 import './rules';
-import './entries';
+import './audit';
 import './import';
 import './entries_display';
