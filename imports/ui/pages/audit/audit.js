@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { $ } from 'meteor/jquery';
 import { _ } from 'meteor/underscore';
+import moment from 'moment';
 import datatables from 'datatables.net';
 // eslint-disable-next-line camelcase
 import datatables_bs from 'datatables.net-bs';
@@ -15,10 +16,41 @@ let theDataTable = null;
 const populateDatatable = (rules) => {
   const data = [];
 
+  const $theAuditTable = $('#tableAudit');
+
+  function filterGlobal() {
+    $theAuditTable.DataTable().search(
+      $('#global_filter').val(),
+      $('#global_regex').prop('checked'),
+      $('#global_smart').prop('checked'),
+    ).draw();
+  }
+
+  function filterColumn(i) {
+    $theAuditTable.DataTable().column(i).search(
+      $(`#col${i}_filter`).val(),
+      $(`#col${i}_regex`).prop('checked'),
+      $(`#col${i}_smart`).prop('checked'),
+    ).draw();
+  }
+
   _.each(rules, (z) => {
     if (z.id) {
-      const row = [z.id, z.phase, (z.tags || []).join('\n'), _.truncate(z.plain, 200)];
-      data.push(row);
+      const base = [
+        z.id || 'unknown',
+        moment(z.requestDate).format('DD/MM/YYYY HH:mm:ss'),
+        z.host || 'unknown',
+        z.uri || 'unknown',
+      ];
+      _.each(z.messages || [], (m) => {
+        const row = _.clone(base);
+        row.push(m.id || 'unknown');
+        row.push(m.data || 'unknown');
+        row.push(m.msg || 'unknown');
+        row.push((m.tags || []).join(','));
+        row.push(m.severity || 'unknown');
+        data.push(row);
+      });
     }
   });
 
@@ -30,8 +62,20 @@ const populateDatatable = (rules) => {
     theDataTable = null;
   }
 
-  theDataTable = $('#tableAudit').DataTable({
+  theDataTable = $theAuditTable.DataTable({
     data,
+    order: [[1, 'desc']],
+    search: {
+      regex: true,
+    },
+  });
+
+  $('input.global_filter').on('keyup click', () => {
+    filterGlobal();
+  });
+
+  $('input.column_filter').on('keyup click', function filterInColumn() {
+    filterColumn($(this).parents('tr').attr('data-column'));
   });
 };
 
@@ -40,7 +84,7 @@ Template.audit.onCreated(function auditOnCreated() {
 
   this.autorun(() => {
     this.subscribe('audit.publish');
-    auditList = Audit.find({}, { sort: { phase: 1, id: 1 } }).fetch();
+    auditList = Audit.find({}, { sort: { requestDate: 1 } }).fetch();
     populateDatatable(auditList);
   });
 });

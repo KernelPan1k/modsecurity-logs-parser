@@ -23,9 +23,9 @@ FlowRouter.route('/rules', {
 });
 
 FlowRouter.route('/audit', {
-  name: 'entries',
+  name: 'audit',
   action() {
-    BlazeLayout.render('publicLayout', { main: 'entries' });
+    BlazeLayout.render('publicLayout', { main: 'audit' });
   },
 });
 

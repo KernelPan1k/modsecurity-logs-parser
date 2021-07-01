@@ -50,7 +50,7 @@ Template.registerHelper('arrayToString', (arr) => arr.join(', '));
  */
 Template.registerHelper('fromNow', (date) => moment(date).fromNow());
 
-Template.registerHelper('formatDateTime', (date) => moment(date).format('DD/MM/YYYY HH:mm'));
+Template.registerHelper('formatDateTime', (date) => moment(date).format('DD/MM/YYYY HH:mm:ss'));
 
 /** return true if the values are strictly equal */
 Template.registerHelper('isEqual', (val1, val2) => val1 === val2);
