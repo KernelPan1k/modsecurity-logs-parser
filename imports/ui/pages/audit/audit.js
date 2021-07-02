@@ -49,6 +49,7 @@ const populateDatatable = (rules) => {
         row.push(m.msg || 'unknown');
         row.push((m.tags || []).join(','));
         row.push(m.severity || 'unknown');
+        row.push(`<a href="/audit/display/${z._id}"><i class="fa fa-eye"></i></a>`);
         data.push(row);
       });
     }
@@ -68,6 +69,11 @@ const populateDatatable = (rules) => {
     search: {
       regex: true,
     },
+    columnDefs: [
+      {
+        targets: -1,
+        sortable: false,
+      }],
   });
 
   $('input.global_filter').on('keyup click', () => {

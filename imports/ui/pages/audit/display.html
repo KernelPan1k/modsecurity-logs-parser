@@ -1,0 +1,92 @@
+<template name="auditDisplay">
+    <style>
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+    </style>
+    <section class="content-header">
+        <h1>
+            Audit Display
+        </h1>
+    </section>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h5>Mongo id</h5>
+            <pre>Mongo ID</pre>
+        </div>
+        <div class="col-md-4">
+            <h5>Request id</h5>
+            <pre>Request ID</pre>
+        </div>
+        <div class="col-md-4">
+            <h5>request Date</h5>
+            <pre>requestDate</pre>
+        </div>
+        <div class="col-md-4">
+            <h5>URI</h5>
+            <pre>URI</pre>
+        </div>
+        <div class="col-md-4">
+            <h5>User-Agent</h5>
+            <pre>User-Agent</pre>
+        </div>
+        <div class="col-md-4">
+            <h5>Host</h5>
+            <pre>Host</pre>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="timeline">
+                <li class="time-label">
+                  <span class="bg-red">
+                    Sections
+                  </span>
+                </li>
+
+                <li>
+                    <i class="badge bg-aqua">A</i>
+
+                    <div class="timeline-item">
+                        <pre>Section A</pre>
+                    </div>
+                </li>
+                <li>
+                    <i class="badge bg-aqua">B</i>
+
+                    <div class="timeline-item">
+                        <pre>Section B</pre>
+                    </div>
+                </li>
+                <li>
+                    <i class="badge bg-aqua">E</i>
+
+                    <div class="timeline-item">
+                        <pre>Section E</pre>
+                    </div>
+                </li>
+                <li>
+                    <i class="badge bg-aqua">F</i>
+
+                    <div class="timeline-item">
+                        <pre>Section F</pre>
+                    </div>
+                </li>
+                <li>
+                    <i class="badge bg-aqua">H</i>
+
+                    <div class="timeline-item">
+                        <pre>Section H</pre>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>

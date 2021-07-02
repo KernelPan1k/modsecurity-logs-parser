@@ -13,7 +13,8 @@
                     <button class="pull-right btn btn-danger" id="remove-all-entries">Remove all</button>
                 </div>
                 <div class="box-body">
-                    <table style="width: 67%; margin: 0 auto 2em auto;" cellspacing="0" cellpadding="3" border="0">
+                    <table class="table table-hover table-bordered"
+                           style="width: 80%; margin: 0 auto 2em auto;" cellspacing="0" cellpadding="3" border="0">
                         <thead>
                         <tr>
                             <th>Target</th>
@@ -22,70 +23,70 @@
                             <th>Use smart search</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr id="filter_global">
+                        <tbody class="box-body">
+                        <tr id="filter_global" class="form-group">
                             <td>Gobal search</td>
-                            <td align="center"><input type="text" class="global_filter" id="global_filter"></td>
+                            <td align="center"><input type="text" class="global_filter form-control" id="global_filter"></td>
                             <td align="center"><input type="checkbox" class="global_filter" id="global_regex"></td>
                             <td align="center"><input type="checkbox" class="global_filter" id="global_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col0" data-column="0">
+                        <tr id="filter_col0" data-column="0" class="form-group">
                             <td>Request id</td>
-                            <td align="center"><input type="text" class="column_filter" id="col0_filter"></td>
+                            <td align="center"><input type="text" class="column_filter form-control" id="col0_filter"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col0_regex"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col0_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col1" data-column="1">
+                        <tr id="filter_col1" data-column="1" class="form-group">
                             <td>Date</td>
-                            <td align="center"><input type="text" class="column_filter" id="col1_filter"></td>
+                            <td align="center"><input type="text" class="column_filter form-control" id="col1_filter"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col1_regex"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col1_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col2" data-column="2">
+                        <tr id="filter_col2" data-column="2" class="form-group">
                             <td>Host</td>
-                            <td align="center"><input type="text" class="column_filter" id="col2_filter"></td>
+                            <td align="center"><input type="text" class="column_filter form-control" id="col2_filter"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col2_regex"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col2_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col3" data-column="3">
+                        <tr id="filter_col3" data-column="3" class="form-group">
                             <td>Uri</td>
-                            <td align="center"><input type="text" class="column_filter" id="col3_filter"></td>
+                            <td align="center"><input type="text" class="column_filter form-control" id="col3_filter"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col3_regex"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col3_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col4" data-column="4">
+                        <tr id="filter_col4" data-column="4" class="form-group">
                             <td>Rule id</td>
-                            <td align="center"><input type="text" class="column_filter" id="col4_filter"></td>
+                            <td align="center"><input type="text" class="column_filter form-control" id="col4_filter"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col4_regex"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col4_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col5" data-column="5">
+                        <tr id="filter_col5" data-column="5" class="form-group">
                             <td>Data</td>
-                            <td align="center"><input type="text" class="column_filter" id="col5_filter"></td>
+                            <td align="center"><input type="text" class="column_filter form-control" id="col5_filter"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col5_regex"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col5_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col6" data-column="6">
+                        <tr id="filter_col6" data-column="6" class="form-group">
                             <td>Data</td>
-                            <td align="center"><input type="text" class="column_filter" id="col6_filter"></td>
+                            <td align="center"><input type="text" class="column_filter form-control" id="col6_filter"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col6_regex"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col6_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col7" data-column="7">
+                        <tr id="filter_col7" data-column="7" class="form-group">
                             <td>Msg</td>
-                            <td align="center"><input type="text" class="column_filter" id="col7_filter"></td>
+                            <td align="center"><input type="text" class="column_filter form-control" id="col7_filter"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col7_regex"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col7_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col8" data-column="8">
+                        <tr id="filter_col8" data-column="8" class="form-group">
                             <td>tags</td>
-                            <td align="center"><input type="text" class="column_filter" id="col8_filter"></td>
+                            <td align="center"><input type="text" class="column_filter form-control" id="col8_filter"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col8_regex"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col8_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col9" data-column="9">
+                        <tr id="filter_col9" data-column="9" class="form-group">
                             <td>severity</td>
-                            <td align="center"><input type="text" class="column_filter" id="col9_filter"></td>
+                            <td align="center"><input type="text" class="column_filter form-control" id="col9_filter"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col9_regex"></td>
                             <td align="center"><input type="checkbox" class="column_filter" id="col9_smart" checked="checked"></td>
                         </tr>
@@ -105,6 +106,7 @@
                             <th>msg</th>
                             <th>tags</th>
                             <th>severity</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                     </table>
