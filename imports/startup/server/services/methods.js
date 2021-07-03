@@ -2,10 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
+import { check } from 'meteor/check';
 import { Config } from '../../../lib/api/config/config';
 import { Rules } from '../../../lib/api/rules/rules';
 import { extractLogs, extractRules } from './parser';
 import { Audit } from '../../../lib/api/audit/audit';
+import { assert } from '../../../lib/utils';
 
 Meteor.methods({
   cleanUpRules() {

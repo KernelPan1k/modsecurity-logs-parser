@@ -1,12 +1,4 @@
 <template name="auditDisplay">
-    <style>
-        pre {
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-y: auto;
-            max-height: 500px;
-        }
-    </style>
     <section class="content-header">
         <h1>
             Audit Display
@@ -124,7 +116,7 @@
 
         {{#each getRules}}
             <div class="col-md-6">
-                <pre>{{this.plain}}</pre>
+                <pre>{{displayRules this.plain}}</pre>
             </div>
         {{/each}}
     </div>

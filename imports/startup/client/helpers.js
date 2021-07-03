@@ -70,3 +70,9 @@ Template.registerHelper('condition', (v1, op, v2) => {
       return false;
   }
 });
+
+/** Check if is a valid url */
+Template.registerHelper('displayRules', (r) => {
+  const rule = (r || '').split(',\\ ');
+  return rule.join(',\\\n ');
+});
