@@ -68,6 +68,7 @@ const populateDatatable = (rules) => {
   theDataTable = $theAuditTable.DataTable({
     data,
     order: [[1, 'desc']],
+    responsive: true,
     search: {
       regex: true,
     },

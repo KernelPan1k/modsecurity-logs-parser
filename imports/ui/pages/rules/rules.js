@@ -40,6 +40,7 @@ const populateDatatable = (rules) => {
   theDataTable = $('#tableRules').DataTable({
     data,
     order: [[1, 'asc'], [0, 'asc']],
+    responsive: true,
   });
 };
 
