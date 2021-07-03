@@ -60,6 +60,9 @@ Schemas.Audit = new SimpleSchema({
   sectionB: {
     type: String,
   },
+  sectionC: {
+    type: String,
+  },
   sectionE: {
     type: String,
   },

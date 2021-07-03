@@ -14,29 +14,29 @@
     </section>
 
     <div class="row">
-        <div class="col-md-4">
-            <h5>Mongo id</h5>
-            <pre>Mongo ID</pre>
+        <div class="col-md-12">
+            <h2 class="bg-blue">Information</h2>
         </div>
+
         <div class="col-md-4">
             <h5>Request id</h5>
-            <pre>Request ID</pre>
+            <pre>{{getAudit.id}}</pre>
         </div>
         <div class="col-md-4">
             <h5>request Date</h5>
-            <pre>requestDate</pre>
+            <pre>{{formatDateTime getAudit.requestDate}}</pre>
         </div>
         <div class="col-md-4">
             <h5>URI</h5>
-            <pre>URI</pre>
+            <pre>{{getAudit.uri}}</pre>
         </div>
         <div class="col-md-4">
             <h5>User-Agent</h5>
-            <pre>User-Agent</pre>
+            <pre>{{getAudit.ua}}</pre>
         </div>
         <div class="col-md-4">
             <h5>Host</h5>
-            <pre>Host</pre>
+            <pre>{{getAudit.host}}</pre>
         </div>
     </div>
 
@@ -44,6 +44,26 @@
 
     <div class="row">
         <div class="col-md-12">
+            <h2 class="bg-blue">Messages</h2>
+        </div>
+
+        {{#each getAudit.messages}}
+            <div class="col-md-12">
+                <pre>{{this.plain}}</pre>
+            </div>
+            <hr>
+        {{/each}}
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="bg-blue">Sections</h2>
+        </div>
+
+        <div class="col-md-12">
+
             <ul class="timeline">
                 <li class="time-label">
                   <span class="bg-red">
@@ -55,38 +75,57 @@
                     <i class="badge bg-aqua">A</i>
 
                     <div class="timeline-item">
-                        <pre>Section A</pre>
+                        <pre>{{getAudit.sectionA}}</pre>
                     </div>
                 </li>
                 <li>
                     <i class="badge bg-aqua">B</i>
 
                     <div class="timeline-item">
-                        <pre>Section B</pre>
+                        <pre>{{getAudit.sectionB}}</pre>
+                    </div>
+                </li>
+                <li>
+                    <i class="badge bg-aqua">C</i>
+
+                    <div class="timeline-item">
+                        <pre>{{getAudit.sectionC}}</pre>
                     </div>
                 </li>
                 <li>
                     <i class="badge bg-aqua">E</i>
 
                     <div class="timeline-item">
-                        <pre>Section E</pre>
+                        <pre>{{getAudit.sectionE}}</pre>
                     </div>
                 </li>
                 <li>
                     <i class="badge bg-aqua">F</i>
 
                     <div class="timeline-item">
-                        <pre>Section F</pre>
+                        <pre>{{getAudit.sectionF}}</pre>
                     </div>
                 </li>
                 <li>
                     <i class="badge bg-aqua">H</i>
 
                     <div class="timeline-item">
-                        <pre>Section H</pre>
+                        <pre>{{getAudit.sectionH}}</pre>
                     </div>
                 </li>
             </ul>
         </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="bg-blue">Rules</h2>
+        </div>
+
+        {{#each getRules}}
+            <div class="col-md-6">
+                <pre>{{this.plain}}</pre>
+            </div>
+        {{/each}}
     </div>
 </template>

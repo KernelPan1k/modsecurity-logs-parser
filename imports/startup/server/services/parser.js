@@ -3,7 +3,7 @@ import fs from 'fs';
 import { Audit } from '../../../lib/api/audit/audit';
 
 class AuditLogEntry {
-  constructor(logId, a, b, e, f, h) {
+  constructor(logId, a, b, c, e, f, h) {
     this.logId = logId;
     this.requestDate = null;
     this.uri = null;
@@ -12,6 +12,7 @@ class AuditLogEntry {
     this.messages = [];
     this.a = a;
     this.b = b;
+    this.c = c;
     this.e = e;
     this.f = f;
     this.h = h;
@@ -73,6 +74,10 @@ class AuditLogEntry {
     });
 
     this.b = this.b.join('\n');
+  }
+
+  parseC() {
+    this.c = this.c.join('\n');
   }
 
   parseE() {
@@ -157,6 +162,7 @@ class AuditLogEntry {
   parseAll() {
     this.parseA();
     this.parseB();
+    this.parseC();
     this.parseH();
     this.parseE();
     this.parseF();
@@ -174,6 +180,7 @@ class AuditLogEntry {
       messages: this.messages || [],
       sectionA: this.a || '',
       sectionB: this.b || '',
+      sectionC: this.c || '',
       sectionE: this.e || '',
       sectionF: this.f || '',
       sectionH: this.h || '',
@@ -197,6 +204,7 @@ export const extractLogs = (file) => {
     let obj = {
       A: [],
       B: [],
+      C: [],
       E: [],
       F: [],
       H: [],
@@ -204,7 +212,7 @@ export const extractLogs = (file) => {
 
     const startRegex = /^--([a-z0-9]{8})-A--$/;
     const endRegex = /^--([a-z0-9]{8})-Z--$/;
-    const otherSectionRegex = /^--[a-z0-9]{8}-(B|E|F|H)--$/;
+    const otherSectionRegex = /^--[a-z0-9]{8}-(B|C|E|F|H)--$/;
 
     lines.forEach((line) => {
       if (!line || '' === line) {
@@ -217,7 +225,7 @@ export const extractLogs = (file) => {
         currentSection = 'A';
         return;
       } if (endRegex.test(line)) {
-        const auditLogEntry = new AuditLogEntry(id, obj.A, obj.B, obj.E, obj.F, obj.H);
+        const auditLogEntry = new AuditLogEntry(id, obj.A, obj.B, obj.C, obj.E, obj.F, obj.H);
         const auditLogEntryToMongo = auditLogEntry.toMongo();
         const document = Audit.findOne({ id: auditLogEntryToMongo.id });
         if (document) {
@@ -230,6 +238,7 @@ export const extractLogs = (file) => {
         obj = {
           A: [],
           B: [],
+          C: [],
           E: [],
           F: [],
           H: [],

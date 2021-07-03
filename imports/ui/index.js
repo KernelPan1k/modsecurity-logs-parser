@@ -1,3 +1,3 @@
-import './layouts';
 import './components';
+import './layouts';
 import './pages';

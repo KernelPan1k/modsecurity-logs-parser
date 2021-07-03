@@ -1,7 +1,7 @@
 import { Template } from 'meteor/templating';
 import { Rules } from '../../../lib/api/rules/rules';
-import './navigation.html';
 import { Audit } from '../../../lib/api/audit/audit';
+import './navigation.html';
 
 Template.navigation.helpers({
   nbrRules() {

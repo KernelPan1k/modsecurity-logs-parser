@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import { $ } from 'meteor/jquery';
 import { _ } from 'meteor/underscore';
 import moment from 'moment';
@@ -49,7 +50,8 @@ const populateDatatable = (rules) => {
         row.push(m.msg || 'unknown');
         row.push((m.tags || []).join(','));
         row.push(m.severity || 'unknown');
-        row.push(`<a href="/audit/display/${z._id}"><i class="fa fa-eye"></i></a>`);
+        const auditPath = FlowRouter.path('audit-display', { id: z._id });
+        row.push(`<a href="${auditPath}"><i class="fa fa-eye"></i></a>`);
         data.push(row);
       });
     }

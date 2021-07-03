@@ -29,8 +29,8 @@ FlowRouter.route('/audit', {
   },
 });
 
-FlowRouter.route('/audit/display/:id', {
-  name: 'entries-display',
+FlowRouter.route('/audit/:id', {
+  name: 'audit-display',
   action() {
     BlazeLayout.render('publicLayout', { main: 'auditDisplay' });
   },
