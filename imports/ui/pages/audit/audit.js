@@ -69,6 +69,7 @@ const populateDatatable = (rules) => {
     data,
     order: [[1, 'desc']],
     responsive: true,
+    searchHighlight: true,
     search: {
       regex: true,
     },
