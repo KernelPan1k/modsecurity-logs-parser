@@ -93,9 +93,10 @@ Template.audit.onCreated(function auditOnCreated() {
   let auditList = [];
 
   this.autorun(() => {
-    this.subscribe('audit.publish');
-    auditList = Audit.find({}, { sort: { requestDate: 1 } }).fetch();
-    populateDatatable(auditList);
+    this.subscribe('audit.publish', () => {
+      auditList = Audit.find({}, { sort: { requestDate: 1 } }).fetch();
+      populateDatatable(auditList);
+    });
   });
 });
 

@@ -49,9 +49,10 @@ Template.rules.onCreated(function rulesOnCreated() {
   this.currentRule = new ReactiveVar(null);
 
   this.autorun(() => {
-    this.subscribe('rules.publish');
-    rulesList = Rules.find({}, { sort: { phase: 1, id: 1 } }).fetch();
-    populateDatatable(rulesList);
+    this.subscribe('rules.publish', () => {
+      rulesList = Rules.find({}, { sort: { phase: 1, id: 1 } }).fetch();
+      populateDatatable(rulesList);
+    });
   });
 });
 
