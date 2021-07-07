@@ -3,7 +3,9 @@ import { _ } from 'meteor/underscore';
 import { Audit } from '../../../lib/api/audit/audit';
 import './home.html';
 
-const makeSeverity = () => {
+const randHexColor = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+
+const makeSeverityChart = () => {
   const severities = [];
 
   _.each(Audit.find({}).fetch(), (a) => {
@@ -20,7 +22,7 @@ const makeSeverity = () => {
 
   const otherLabel = _.difference(definedLabel, _.uniq(severities));
   const labels = _.flatten([definedLabel, otherLabel]);
-  const otherColors = _.map(otherLabel, () => `#${Math.floor(Math.random() * 16777215).toString(16)}`);
+  const otherColors = _.map(otherLabel, () => randHexColor());
   const backgroundColor = _.flatten([definedColors, otherColors]);
   const countSeverity = _.countBy(severities);
   const data = _.map(labels, (l) => countSeverity[l]);
@@ -37,6 +39,7 @@ const makeSeverity = () => {
       ],
     },
     options: {
+      responsive: true,
       legend: { display: false },
       title: {
         display: true,
@@ -48,8 +51,52 @@ const makeSeverity = () => {
   new Chart(document.querySelector('#chartSeverity'), config);
 };
 
+const makeTopAttacksChart = () => {
+  const attacks = [];
+
+  _.each(Audit.find({}).fetch(), (a) => {
+    _.each(a.messages || [], (m) => {
+      const msg = m.msg || null;
+      if (msg && -1 === msg.indexOf('Anomaly Score Exceeded')) {
+        attacks.push(msg);
+      }
+    });
+  });
+
+  const countAttacks = _.countBy(attacks);
+  const pairs = _.pairs(countAttacks);
+  const top10 = _.first(_.sortBy(pairs, (z) => z[1]).reverse(), 10);
+  const labels = _.map(top10, (z) => z[0]);
+  const data = _.map(top10, (z) => z[1]);
+  const backgroundColor = _.map(data, () => randHexColor());
+
+  const config = {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          backgroundColor,
+          data,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      legend: { display: false },
+      title: {
+        display: true,
+        text: 'Top 10 Attacks',
+      },
+    },
+  };
+
+  new Chart(document.querySelector('#chartTopAttacks'), config);
+};
+
 const makeChart = () => {
-  makeSeverity();
+  makeSeverityChart();
+  makeTopAttacksChart();
 };
 
 Template.home.onCreated(function ConfigOnCreated() {
