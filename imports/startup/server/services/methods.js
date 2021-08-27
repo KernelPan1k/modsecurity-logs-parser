@@ -2,12 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
-import { check } from 'meteor/check';
 import { Config } from '../../../lib/api/config/config';
 import { Rules } from '../../../lib/api/rules/rules';
 import { extractLogs, extractRules } from './parser';
 import { Audit } from '../../../lib/api/audit/audit';
-import { assert } from '../../../lib/utils';
+import {check} from "meteor/check";
 
 Meteor.methods({
   cleanUpRules() {
@@ -16,9 +15,10 @@ Meteor.methods({
   cleanUpAudit() {
     return Audit.remove({});
   },
-  parseRules() {
+  parseRules(r) {
+    check(r, String);
     const bound = Meteor.bindEnvironment((callback) => { callback(); });
-    const rulesPath = Config.findOne().rulesPath;
+    const rulesPath = Config.findOne().rulesPath || r;
 
     if (!rulesPath || !_.isDir(rulesPath)) {
       throw new Meteor.Error('not_found', 'Invalid path');

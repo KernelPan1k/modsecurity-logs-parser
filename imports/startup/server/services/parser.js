@@ -34,7 +34,8 @@ class AuditLogEntry {
       Dec: 11,
     };
 
-    const sp1 = str.split(':');
+    const sp = str.split('.')[0];
+    const sp1 = sp.split(':');
     const sp2 = sp1[0].split('/');
     const day = parseInt(sp2[0], 10);
     const month = parseInt(months[sp2[1]], 10);
@@ -42,14 +43,15 @@ class AuditLogEntry {
     const hour = parseInt(sp1[1], 10);
     const minute = parseInt(sp1[2], 10);
     const seconds = parseInt(sp1[3], 10);
+
     // TODO UTC
     this.requestDate = new Date(year, month, day, hour, minute, seconds);
   }
 
   parseA() {
     const a = this.a[0] || '';
-    if (/^\[([0-9]{2}\/[a-zA-Z]+\/[0-9]{4}(:[0-9]{2}){3}) \+[0-9]+\]/.test(a)) {
-      const arr = a.match(/^\[([0-9]{2}\/[a-zA-Z]+\/[0-9]{4}(:[0-9]{2}){3}) \+[0-9]+\]/);
+    if (/^\[([0-9]{2}\/[a-zA-Z]+\/[0-9]{4}(:[0-9]{2}){3})(\.-?[0-9]+)? \+[0-9]+\]/.test(a)) {
+      const arr = a.match(/^\[([0-9]{2}\/[a-zA-Z]+\/[0-9]{4}(:[0-9]{2}){3})(\.-?[0-9]+)? \+[0-9]+\]/);
       this.stringDateToDate(arr[1]);
     }
 

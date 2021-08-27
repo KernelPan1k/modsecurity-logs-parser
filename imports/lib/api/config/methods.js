@@ -35,7 +35,7 @@ export const ConfigRulesAddOrEdit = new ValidatedMethod({
     }
 
     if (Meteor.isServer) {
-      return Meteor.call('parseRules');
+      return Meteor.call('parseRules', rulesPath);
     }
 
     return true;
