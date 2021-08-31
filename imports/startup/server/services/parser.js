@@ -66,12 +66,20 @@ class AuditLogEntry {
 
       if (/^User-Agent:/.test(z)) {
         const arr = z.match(/^User-Agent: (.+)$/);
-        this.ua = (arr[1] || '').trim();
+        try {
+          this.ua = (arr[1] || '').trim();
+        } catch (e) {
+          this.ua = null;
+        }
       }
 
       if (/^Host:/.test(z)) {
         const arr = z.match(/^Host: (.+)$/);
-        this.host = (arr[1] || '').trim();
+        try {
+          this.host = (arr[1] || '').trim();
+        } catch (e) {
+          this.host = null;
+        }
       }
     });
 
@@ -233,7 +241,11 @@ export const extractLogs = (file) => {
         if (document) {
           Audit.update({ _id: document._id }, { $set: auditLogEntryToMongo });
         } else {
-          Audit.insert(auditLogEntryToMongo);
+          try {
+            Audit.insert(auditLogEntryToMongo);
+          } catch (e) {
+            console.log('fail: ', auditLogEntryToMongo);
+          }
         }
         currentSection = null;
         id = null;
