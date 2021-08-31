@@ -183,7 +183,7 @@ class AuditLogEntry {
 
     return {
       id: this.logId || null,
-      requestDate: this.requestDate || null,
+      requestDate: this.requestDate || new Date(1970, 0, 1, 0, 0, 0),
       uri: this.uri || '',
       ua: this.ua || '',
       host: this.host || '',

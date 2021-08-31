@@ -2,11 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
+import {check } from 'meteor/check';
 import { Config } from '../../../lib/api/config/config';
 import { Rules } from '../../../lib/api/rules/rules';
 import { extractLogs, extractRules } from './parser';
 import { Audit } from '../../../lib/api/audit/audit';
-import {check} from "meteor/check";
 
 Meteor.methods({
   cleanUpRules() {
@@ -14,6 +14,10 @@ Meteor.methods({
   },
   cleanUpAudit() {
     return Audit.remove({});
+  },
+  removeAuditSelected(requestIds) {
+    check(requestIds, Array);
+    return Audit.remove({id: { $in: requestIds } });
   },
   parseRules(r) {
     check(r, String);
@@ -83,9 +87,7 @@ Meteor.methods({
                 r.tags = _.uniq(r.tags);
                 try {
                   const docId = Rules.findOne({ id: r.id });
-                  if (_.isId(docId)) {
-                    Rules.update({ _id: docId }, r);
-                  } else {
+                  if (!_.isId(docId)) {
                     Rules.insert(r);
                   }
                 } catch (e) {

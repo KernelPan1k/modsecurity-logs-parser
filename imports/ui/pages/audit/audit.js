@@ -14,7 +14,14 @@ import './audit.html';
 
 let theDataTable = null;
 
-const populateDatatable = (rules) => {
+const getAuditList = () => Audit.find({}, { sort: { requestDate: 1 } }).fetch();
+
+const populateDatatable = (rules = null) => {
+  if (!rules) {
+    // eslint-disable-next-line no-param-reassign
+    rules = getAuditList();
+  }
+
   const data = [];
 
   const $theAuditTable = $('#tableAudit');
@@ -110,6 +117,24 @@ Template.audit.events({
         return;
       }
       flashMessage('All audit entries removed', 'success');
+    });
+  },
+  'click #remove-all-selected': (event) => {
+    event.preventDefault();
+    const requestIds = _.uniq(
+      _.filter(
+        _.map(theDataTable.rows({ search: 'applied' }).data(), (z) => z[0]),
+        (z) => !!z,
+      ),
+    );
+
+    Meteor.call('removeAuditSelected', requestIds, (err) => {
+      if (err) {
+        flashMessage(err, 'danger');
+        return;
+      }
+      flashMessage('All audit entries removed', 'success');
+      populateDatatable();
     });
   },
 });
