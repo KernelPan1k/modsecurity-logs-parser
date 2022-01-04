@@ -11,6 +11,8 @@ import 'datatables.net-bs/css/dataTables.bootstrap.css';
 import { flashMessage } from '../../../startup/client/utils';
 import { Audit } from '../../../lib/api/audit/audit';
 import './audit.html';
+import { ExcludeAddOrEdit } from '../../../lib/api/exclude/methods';
+import { Exclude } from '../../../lib/api/exclude/excludes';
 
 let theDataTable = null;
 
@@ -75,6 +77,7 @@ const populateDatatable = (rules = null) => {
   theDataTable = $theAuditTable.DataTable({
     data,
     order: [[1, 'desc']],
+    lengthMenu: [100, 200, 500],
     responsive: true,
     searchHighlight: true,
     search: {
@@ -107,7 +110,28 @@ Template.audit.onCreated(function auditOnCreated() {
   });
 });
 
+Template.audit.helpers({
+  getRulesList() {
+    try {
+      return Exclude.findOne({}).excludeRules;
+    } catch (e) {
+      return '';
+    }
+  },
+});
+
 Template.audit.events({
+  'click #save-rules': (event) => {
+    event.preventDefault();
+    const excludeRules = document.querySelector('#exclude-list').value;
+    ExcludeAddOrEdit.call({ excludeRules }, (err) => {
+      if (err) {
+        flashMessage(err, 'danger');
+        return;
+      }
+      flashMessage('All rules are saved', 'success');
+    });
+  },
   'click #remove-all-entries': (event) => {
     event.preventDefault();
 
@@ -117,6 +141,19 @@ Template.audit.events({
         return;
       }
       flashMessage('All audit entries removed', 'success');
+    });
+  },
+  'click #remove-all-by-rules': (event) => {
+    event.preventDefault();
+    const excludesrules = document.querySelector('#exclude-list').value;
+
+    Meteor.call('cleanUpByRules', excludesrules, (err) => {
+      if (err) {
+        flashMessage(err, 'danger');
+        return;
+      }
+      flashMessage('All audit entries removed following the rules', 'success');
+      populateDatatable();
     });
   },
   'click #remove-all-selected': (event) => {

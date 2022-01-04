@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
-import {check } from 'meteor/check';
+import { check } from 'meteor/check';
 import { Config } from '../../../lib/api/config/config';
 import { Rules } from '../../../lib/api/rules/rules';
 import { extractLogs, extractRules } from './parser';
@@ -17,11 +17,43 @@ Meteor.methods({
   },
   removeAuditSelected(requestIds) {
     check(requestIds, Array);
-    return Audit.remove({id: { $in: requestIds } });
+    return Audit.remove({ id: { $in: requestIds } });
+  },
+  cleanUpByRules(rules) {
+    check(rules, String);
+    const rulesArray = rules.split('\n');
+    _.each(rulesArray, (z) => {
+      const line = (z || '').trim();
+      if ('' === line) {
+        return;
+      }
+      const split = line.split('$$$$');
+      const key = split[0];
+      const payload = split[1];
+
+      if (-1 !== [
+        'id',
+        'requestDate',
+        'uri',
+        'ua',
+        'host',
+        'sectionA',
+        'sectionB',
+        'sectionC',
+        'sectionE',
+        'sectionF',
+        'sectionH'].indexOf(key)) {
+        const obj = {};
+        obj[key] = { $regex: payload };
+        Audit.remove(obj);
+      }
+    });
   },
   parseRules(r) {
     check(r, String);
-    const bound = Meteor.bindEnvironment((callback) => { callback(); });
+    const bound = Meteor.bindEnvironment((callback) => {
+      callback();
+    });
     const rulesPath = Config.findOne().rulesPath || r;
 
     if (!rulesPath || !_.isDir(rulesPath)) {
@@ -63,7 +95,9 @@ Meteor.methods({
     return true;
   },
   parseAuditLogs() {
-    const bound = Meteor.bindEnvironment((callback) => { callback(); });
+    const bound = Meteor.bindEnvironment((callback) => {
+      callback();
+    });
     const auditPath = Config.findOne().auditPath;
 
     if (!auditPath || !_.isDir(auditPath)) {

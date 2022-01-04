@@ -166,7 +166,9 @@ class AuditLogEntry {
       obj.tags = _.map(arr, (z) => z[1]);
     }
 
-    this.messages.push(obj);
+    if (-1 === [980130, 949110].indexOf(parseInt(obj.id, 10))) {
+      this.messages.push(obj);
+    }
   }
 
   parseAll() {
