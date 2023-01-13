@@ -80,6 +80,7 @@ const populateDatatable = (rules = null) => {
     lengthMenu: [100, 200, 500],
     responsive: true,
     searchHighlight: true,
+    render: $.fn.dataTable.render.text(),
     search: {
       regex: true,
     },

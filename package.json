@@ -2,8 +2,7 @@
   "name": "modsecurity-helper",
   "private": true,
   "scripts": {
-    "start": "meteor run",
-    "desktop": "meteor-desktop"
+    "start": "meteor run"
   },
   "dependencies": {
     "@babel/runtime": "^7.10.2",
@@ -99,7 +98,6 @@
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-meteor": "^7.0.0",
-    "eslint-plugin-react": "^7.20.0",
-    "meteor-desktop": "^2.2.5"
+    "eslint-plugin-react": "^7.20.0"
   }
 }
