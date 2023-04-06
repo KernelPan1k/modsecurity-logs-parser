@@ -5,6 +5,7 @@ import { $ } from 'meteor/jquery';
 import { _ } from 'meteor/underscore';
 import moment from 'moment';
 import datatables from 'datatables.net';
+import filterXSS from 'xss';
 // eslint-disable-next-line camelcase
 import datatables_bs from 'datatables.net-bs';
 import 'datatables.net-bs/css/dataTables.bootstrap.css';
@@ -47,16 +48,16 @@ const populateDatatable = (rules = null) => {
   _.each(rules, (z) => {
     if (z.id) {
       const base = [
-        z.id || 'unknown',
+        filterXSS(z.id) || 'unknown',
         moment(z.requestDate).format('DD/MM/YYYY HH:mm:ss'),
-        z.host || 'unknown',
-        z.uri || 'unknown',
+        filterXSS(z.host) || 'unknown',
+        filterXSS(z.uri) || 'unknown',
       ];
       _.each(z.messages || [], (m) => {
         const row = _.clone(base);
         row.push(m.id || 'unknown');
-        row.push(m.data || 'unknown');
-        row.push(m.msg || 'unknown');
+        row.push(filterXSS(m.data) || 'unknown');
+        row.push(filterXSS(m.msg) || 'unknown');
         row.push((m.tags || []).join(','));
         row.push(m.severity || 'unknown');
         const auditPath = FlowRouter.path('audit-display', { id: z._id });
