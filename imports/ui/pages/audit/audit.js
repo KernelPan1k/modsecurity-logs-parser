@@ -79,7 +79,7 @@ const populateDatatable = (rules = null) => {
   theDataTable = $theAuditTable.DataTable({
     data,
     order: [[1, 'desc']],
-    lengthMenu: [100, 200, 500],
+    lengthMenu: [200, 500, 1000],
     responsive: true,
     searchHighlight: true,
     render: $.fn.dataTable.render.text(),
