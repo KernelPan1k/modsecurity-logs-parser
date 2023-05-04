@@ -61,7 +61,8 @@ const populateDatatable = (rules = null) => {
         row.push((m.tags || []).join(','));
         row.push(m.severity || 'unknown');
         const auditPath = FlowRouter.path('audit-display', { id: z._id });
-        row.push(`<a href="${auditPath}"><i class="fa fa-eye"></i></a>`);
+        row.push(`<a href="${auditPath}"><i class="fa fa-eye"></i></a>
+                  <a href="#" class="remove-row" data-id="${z.id}"><i class="fa fa-remove bg-red"></i></a>`);
         data.push(row);
       });
     }
@@ -173,6 +174,19 @@ Template.audit.events({
         return;
       }
       flashMessage('All audit entries removed', 'success');
+      populateDatatable();
+    });
+  },
+  'click .remove-row': (event) => {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const id = element.getAttribute('data-id');
+    Meteor.call('removeAuditSelected', [id], (err) => {
+      if (err) {
+        flashMessage(err, 'danger');
+        return;
+      }
+      flashMessage('audit entry removed', 'success');
       populateDatatable();
     });
   },
