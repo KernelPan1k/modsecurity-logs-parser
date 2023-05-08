@@ -1,10 +1,12 @@
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { _ } from 'meteor/underscore';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { Audit } from '../../../lib/api/audit/audit';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Audit } from '../../../lib/api/audit/audit';
 import { Rules } from '../../../lib/api/rules/rules';
 import './display.html';
+import { flashMessage } from '../../../startup/client/utils';
 
 Template.auditDisplay.onCreated(function auditDisplayOnCreated() {
   const id = FlowRouter.getParam('id');
@@ -36,5 +38,20 @@ Template.auditDisplay.helpers({
     });
 
     return Rules.find({ id: { $in: rulesIds } });
+  },
+});
+
+Template.auditDisplay.events({
+  'click #remove': (event) => {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const id = element.getAttribute('data-id');
+    Meteor.call('removeAuditSelected', [id], (err) => {
+      if (err) {
+        flashMessage(err, 'danger');
+        return;
+      }
+      flashMessage('audit entry removed', 'success');
+    });
   },
 });

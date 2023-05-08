@@ -61,7 +61,7 @@ const populateDatatable = (rules = null) => {
         row.push((m.tags || []).join(','));
         row.push(m.severity || 'unknown');
         const auditPath = FlowRouter.path('audit-display', { id: z._id });
-        row.push(`<a href="${auditPath}"><i class="fa fa-eye"></i></a>
+        row.push(`<a href="${auditPath}" target="_blank"><i class="fa fa-eye"></i></a>
                   <a href="#" class="remove-row" data-id="${z.id}"><i class="fa fa-remove bg-red"></i></a>`);
         data.push(row);
       });
