@@ -111,7 +111,7 @@ Meteor.methods({
         }
 
         files.forEach((file) => {
-          if (/.+\.log$/.test(file)) {
+          if (/.+\.log(\.[1-9]{1,2})?/.test(file)) {
             const logs = extractLogs(path.join(auditPath, file));
             _.each(logs, (r) => {
               if (r.id && r.plain) {
